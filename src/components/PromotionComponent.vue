@@ -9,15 +9,22 @@ export default {
     data() {
     return {
       Button: {
-        title: 'Shop now', color: '#3BB77E',
+        title: 'Shop now', color: '#3BB77E', 
       }
     }
-}
+    },
+    methods: {
+        shopNow(title) {
+             alert("Let's shop: "+title);
+        }
+    }
+
+
 }
 </script>
 <template>
     <div class="wrapper" :style="{backgroundColor: color}">
-        <div class="txt">
+        <div class="txt" @click="shopNow(title)">
             <div class="name">{{ title }}</div>
             <ButtonComponent :color="Button.color" :title="Button.title"></ButtonComponent>
         </div>
