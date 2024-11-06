@@ -1,14 +1,14 @@
 <script>
 export default {
     name: 'ButtonComponent',
-    props: ['color', 'title']
+    props: ['color']
 }
 
 </script>
 
 <template>
     <div class="shop-btn" :style="{backgroundColor: color}">
-       <span class="txt">{{ title }}</span>
+       <span class="txt">Shop now</span>
        <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
     </div>
 </template>

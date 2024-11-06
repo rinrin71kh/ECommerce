@@ -2,7 +2,7 @@
 import ButtonComponent from './ButtonComponent.vue';
 export default {
     name: 'PromotionComponent',
-    props: ['title', 'color', 'image'],
+    props: ['title', 'color', 'btnColor', 'image'],
     components: {
        ButtonComponent 
     },
@@ -26,7 +26,7 @@ export default {
     <div class="wrapper" :style="{backgroundColor: color}">
         <div class="txt" @click="shopNow(title)">
             <div class="name">{{ title }}</div>
-            <ButtonComponent :color="Button.color" :title="Button.title"></ButtonComponent>
+            <ButtonComponent :color="btnColor"></ButtonComponent>
         </div>
         <div class="img-wrapper">
             <img :src="image" alt="image" class="image">
