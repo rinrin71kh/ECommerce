@@ -46,6 +46,8 @@ export default{
   mounted () {
           // Mounted life cycle - It will be executed every time
           // this component is loaded
+
+          
           this.fetchCategories()
           this.fetchPromotions()
      }
