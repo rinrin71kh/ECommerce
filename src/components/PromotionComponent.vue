@@ -23,7 +23,7 @@ export default {
 <template>
   <div class="wrapper" :style="{ backgroundColor: color }">
     <div class="txt" @click="shopNow(title)">
-      <div class="name">{{ title }}</div>
+      <div class="name">{{ title || 'promotion name' }}</div>
       <ButtonComponent :color="btnColor" :title="'Shop Now'" />
     </div>
     <div class="img-wrapper">
