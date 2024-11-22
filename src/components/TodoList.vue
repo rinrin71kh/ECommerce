@@ -1,28 +1,81 @@
 <template>
-  <ul class="todoLists">
-    <TodoItem v-for="todo of todos" icon="uil-adobe-alt" :todo="todo" />
-  </ul>
+  <div>
+    <!-- Daily Task Section -->
+    <div class="daily-task mt-3">
+      <div class="task-title">Daily Tasks</div>
+      <ul class="todoLists">
+        <TodoItem
+          v-for="todo in todos"
+          :key="todo.id"
+          icon="uil-adobe-alt"
+          :todo="todo"
+        />
+      </ul>
+    </div>
+    <!-- Pending Tasks Section -->
+    <div class="daily-task mt-3">
+      <div class="task-title">Pending Tasks</div>
+     
+    </div>
+    <ul class="todoLists">
+      <TodoItem
+        v-for="todo in pendingTasks"
+        :key="todo.id"
+        icon="uil-adobe-alt"
+        :todo="todo"
+      />
+    </ul>
+
+    <!-- Completed Tasks Section -->
+    <div class="daily-task mt-3">
+      <div class="task-title">Completed Tasks</div>
+     
+    </div>
+    <ul class="todoLists">
+      <TodoItem
+        v-for="todo in completedTasks"
+        :key="todo.id"
+        icon="uil-adobe-alt"
+        :todo="todo"
+      />
+    </ul>
+  </div>
 </template>
+
 <script>
-import { mapState } from "pinia";
-import TodoItem from "./TodoItem.vue";
+import { computed } from "vue";
 import { useTodoStore } from "../stores/todo";
+import TodoItem from "./TodoItem.vue";
 
 export default {
-  setup() {
-    const todoStore = useTodoStore();
-    return { todoStore };
-  },
   name: "TodoList",
   components: {
     TodoItem,
   },
-  async mounted() {
-    // we will call action fetchTodos
-    await this.todoStore.fetchTodos();
-  },
-  computed: {
-    ...mapState(useTodoStore, ["todos", "countTodos"]),
+  setup() {
+    const todoStore = useTodoStore();
+
+    // Computed properties for all tasks
+    const todos = computed(() => todoStore.todos); // All tasks for Daily Tasks
+    const pendingTasks = computed(() =>
+      todoStore.todos.filter((todo) => todo.status === "pending")
+    ); // Pending tasks
+    const completedTasks = computed(() =>
+      todoStore.todos.filter((todo) => todo.status === "completed")
+    ); // Completed tasks
+
+    // Fetch todos when component is mounted
+    const fetchTodos = async () => {
+      await todoStore.fetchTodos();
+    };
+
+    fetchTodos();
+
+    return {
+      todos,
+      pendingTasks,
+      completedTasks,
+    };
   },
 };
 </script>

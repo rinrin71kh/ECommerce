@@ -68,10 +68,13 @@ textarea::-webkit-scrollbar {
   top: 50%;
   right: 15px;
   transform: translateY(-50%);
-  pointer-events: none;
   font-size: 24px;
   color: #707070;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
+
+
 .input-field textarea:focus ~ .note-icon {
   color: #4070f4;
 }
@@ -139,12 +142,51 @@ textarea::-webkit-scrollbar {
   font-size: 14px;
   border-radius: 4px;
   cursor: pointer;
-  pointer-events: none;
   white-space: nowrap;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
+.clear-button:hover {
+  background-color: #0e4bf1; /* Darker shade for hover effect */
+  transform: scale(1.05); /* Slight enlargement on hover */
+}
+
+.clear-button:active {
+  background-color: #0c3da2; /* Even darker shade for active state */
+  transform: scale(0.95); /* Slight shrink effect on click */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow effect on active state */
+}
+
 .clear-button:hover {
   background-color: #0e4bf1;
 }
+.daily-task {
+  display: flex;
+  flex-direction: column; /* Change to column to stack items */
+  align-items: flex-start; /* Align items to the start */
+  margin-top: 15px;
+}
+
+.daily-task .task-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10px; /* Add spacing below the title */
+}
+
+.todoLists {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%; /* Ensure it takes full width */
+}
+
+.todoLists li {
+  margin-bottom: 10px;
+}
+
+
+
 @media screen and (max-width: 350px) {
   .container {
     padding: 25px 10px;

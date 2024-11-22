@@ -5,11 +5,20 @@ export const useTodoStore = defineStore("todo", {
     todos: [],
   }),
   getters: {
-    countTodos: (state) => state.todos.length,
+    // Count only pending tasks
+    countTodos: (state) => state.todos.filter((todo) => todo.status === "pending").length,
+
+    // List of pending tasks
+    pendingTasks: (state) => state.todos.filter((todo) => todo.status === "pending"),
+
+    // List of completed tasks
+    completedTasks: (state) => state.todos.filter((todo) => todo.status === "completed"),
   },
   actions: {
+    // Fetch todos asynchronously
     async fetchTodos() {
-      await new Promise((resolve) => {
+      console.log("Fetching todos..."); // Debug
+      const todos = await new Promise((resolve) => {
         setTimeout(() => {
           resolve([
             {
@@ -24,19 +33,47 @@ export const useTodoStore = defineStore("todo", {
               status: "completed",
               time: "2023-11-01 11:00:00",
             },
+            {
+              id: 3,
+              task: "Grocery shopping",
+              status: "pending",
+              time: "2023-11-01 14:00:00",
+            },
           ]);
         }, 1000);
-      }).then((todos) => (this.todos = todos));
+      });
+
+      // Update the state with fetched todos
+      this.todos = todos;
+      console.log("Todos fetched:", this.todos); // Debug
     },
+
+    // Toggle todo status
     toggleStatus(id) {
-      const foundIndex = this.todos.findIndex((t) => t.id == id);
-      if (foundIndex >= 0) {
-        if (this.todos[foundIndex].status == "completed") {
-          this.todos[foundIndex].status = "pending";
-        } else {
-          this.todos[foundIndex].status = "completed";
-        }
+      const todo = this.todos.find((t) => t.id === id);
+      if (todo) {
+        todo.status = todo.status === "completed" ? "pending" : "completed";
+        console.log(`Todo with ID ${id} status toggled to ${todo.status}`); // Debug
       }
+    },
+
+    // Clear all todos
+    clearAll() {
+      console.log("Clearing todos..."); // Debug
+      this.todos = []; // Clear the todos array
+      console.log("Todos cleared:", this.todos); // Debug
+    },
+
+    // Add a new todo
+    addTodo(task) {
+      const newTodo = {
+        id: Date.now(),
+        task: task.trim(),
+        status: "pending",
+        time: new Date().toISOString(),
+      };
+      this.todos.push(newTodo);
+      console.log("New todo added:", newTodo); // Debug
     },
   },
 });
