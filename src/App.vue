@@ -11,21 +11,30 @@ export default {
     ButtonComponent,
     CategoryComponent,
     PromotionComponent,
-    ProductComponent, // Register ProductComponent
+    ProductComponent,
   },
   data() {
     return {
       Categories: [],
       Promotions: [],
-      Products: [], // Add Products data
-      Groups:[]
+      Products: [],
+      Groups: [],
+      selectedCategory: null, // To track the active category
     };
+  },
+  computed: {
+    filteredProducts() {
+      // Filter products based on the selected category
+      if (!this.selectedCategory) return this.Products;
+      return this.Products.filter(
+        (product) => product.categoryId === this.selectedCategory
+      );
+    },
   },
   methods: {
     async fetchCategories() {
       try {
         const response = await axios.get('http://localhost:3000/api/categories');
-        console.log('Categories:', response.data);
         this.Categories = response.data;
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -34,7 +43,6 @@ export default {
     async fetchPromotions() {
       try {
         const response = await axios.get('http://localhost:3000/api/promotions');
-        console.log('Promotions:', response.data);
         this.Promotions = response.data;
       } catch (error) {
         console.error('Error fetching promotions:', error);
@@ -43,13 +51,11 @@ export default {
     async fetchProducts() {
       try {
         const response = await axios.get('http://localhost:3000/api/products');
-        console.log('Products:', response.data);
-        // Clean the image field by removing brackets and quotes
-        this.Products = response.data.map(product => ({
+        this.Products = response.data.map((product) => ({
           ...product,
-          image: Array.isArray(product.image) // If image is an array, join it
+          image: Array.isArray(product.image)
             ? product.image[0]
-            : product.image.replace(/[\[\]"]/g, ''), // Clean brackets and quotes
+            : product.image.replace(/[\[\]"]/g, ''),
         }));
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -58,7 +64,6 @@ export default {
     async fetchGroups() {
       try {
         const response = await axios.get('http://localhost:3000/api/groups');
-        console.log('Groups:', response.data); // Log groups
         this.Groups = response.data;
       } catch (error) {
         console.error('Error fetching groups:', error);
@@ -66,7 +71,12 @@ export default {
     },
   },
   async mounted() {
-    await Promise.all([this.fetchCategories(), this.fetchPromotions(), this.fetchProducts(),this.fetchGroups(),]);
+    await Promise.all([
+      this.fetchCategories(),
+      this.fetchPromotions(),
+      this.fetchProducts(),
+      this.fetchGroups(),
+    ]);
   },
 };
 </script>
@@ -99,14 +109,33 @@ export default {
     </div>
     <div v-else>No promotions available</div>
 
+    <!-- Category Tabs -->
+    <div class="tabs">
+      <button
+        v-for="category in Categories"
+        :key="category.id"
+        class="tab-button"
+        :class="{ active: selectedCategory === category.id }"
+        @click="selectedCategory = category.id"
+      >
+        {{ category.name }}
+      </button>
+      <button
+        class="tab-button"
+        :class="{ active: selectedCategory === null }"
+        @click="selectedCategory = null"
+      >
+        All
+      </button>
+    </div>
+
     <!-- Products Section -->
-    <div class="product" v-if="Products.length">
-     
-      <template v-for="product in Products" :key="product.id">
+    <div class="product" v-if="filteredProducts.length">
+      <template v-for="product in filteredProducts" :key="product.id">
         <ProductComponent
           :name="product.name"
           :amount="product.instock"
-          :color="product.color || '#F0F0F0'" 
+          :color="product.color || '#F0F0F0'"
           :image="product.image"
         />
       </template>
@@ -127,5 +156,31 @@ export default {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tab-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.tab-button:hover {
+  background-color: #007bff;
+  color: white;
 }
 </style>
