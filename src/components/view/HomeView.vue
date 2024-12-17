@@ -1,20 +1,39 @@
 <template>
-    <div>
-      <!-- Categories Section -->
-      <div class="category" v-if="Categories.length">
+  <div class="home-container">
+    <!-- Menu Component -->
+    <MenuComponent />
+
+    <!-- Showcase Component -->
+    <div class="showcase">
+      <h1 class="showcase-title">Don’t miss amazing grocery deals</h1>
+      <p>Sign up for the daily newsletter</p>
+      <div class="newsletter-container">
+        <input type="email" placeholder="Your email address" class="newsletter-input" />
+        <button class="subscribe-button">Subscribe</button>
+      </div>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="section">
+      <h2>Categories</h2>
+      <div class="category-container">
         <template v-for="category in Categories" :key="category.id">
-          <CategoryComponent
-            :name="category.name"
-            :amount="category.productCount"
-            :color="category.color"
-            :image="category.image"
-          />
+          <router-link :to="`/categories/${category.id}`" class="category-link">
+            <CategoryComponent
+              :name="category.name"
+              :amount="category.productCount"
+              :color="category.color"
+              :image="category.image"
+            />
+          </router-link>
         </template>
       </div>
-      <div v-else>No categories available</div>
-  
-      <!-- Promotions Section -->
-      <div class="promotion" v-if="Promotions.length">
+    </div>
+
+    <!-- Promotions Section -->
+    <div class="section">
+      <h2>Promotions</h2>
+      <div class="promotion-container">
         <template v-for="promotion in Promotions" :key="promotion.id">
           <PromotionComponent
             :title="promotion.title"
@@ -24,182 +43,154 @@
           />
         </template>
       </div>
-      <div v-else>No promotions available</div>
-  
-      <!-- Popular Products Header with Tabs -->
-      <div class="header">
-        <h1 class="title">Popular Products</h1>
-        <div class="tabs" v-if="Categories && Categories.length">
-          <button
-            v-for="category in Categories"
-            :key="category.id"
-            class="tab-button"
-            :class="{ active: selectedCategory === category.id }"
-            @click="selectedCategory = category.id"
-          >
-            {{ category.name }}
-          </button>
-          <button
-            class="tab-button"
-            :class="{ active: selectedCategory === null }"
-            @click="selectedCategory = null"
-          >
-            All
-          </button>
-        </div>
-      </div>
-  
-      <!-- Products Section -->
-      <div class="product" v-if="filteredProducts.length">
+    </div>
+
+    <!-- Products Section -->
+    <div class="section">
+      <h2>Popular Products</h2>
+      <div class="product-container">
         <template v-for="product in filteredProducts" :key="product.id">
-          <ProductComponent
-            :name="product.name"
-            :amount="product.instock"
-            :color="product.color || '#F0F0F0'"
-            :image="product.image"
-          />
+          <router-link :to="`/products/${product.id}`" class="product-link">
+            <ProductComponent
+              :name="product.name"
+              :amount="product.instock"
+              :color="product.color || '#F0F0F0'"
+              :image="product.image"
+            />
+          </router-link>
         </template>
       </div>
-      <div v-else>No products available</div>
     </div>
-  </template>
-  
-  <script>
-  import axios from "axios";
-  import CategoryComponent from "../CategoryComponent.vue";
-  import PromotionComponent from "../PromotionComponent.vue";
-  import ProductComponent from "../ProductComponent.vue";
-  
-  export default {
-    name: "HomeView",
-    components: {
-      CategoryComponent,
-      PromotionComponent,
-      ProductComponent,
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import MenuComponent from "../MenuComponent.vue";
+import CategoryComponent from "../CategoryComponent.vue";
+import PromotionComponent from "../PromotionComponent.vue";
+import ProductComponent from "../ProductComponent.vue";
+
+export default {
+  name: "HomeView",
+  components: {
+    MenuComponent,
+    CategoryComponent,
+    PromotionComponent,
+    ProductComponent,
+  },
+  data() {
+    return {
+      Categories: [],
+      Promotions: [],
+      Products: [],
+      selectedCategory: null,
+    };
+  },
+  computed: {
+    filteredProducts() {
+      if (!this.selectedCategory) return this.Products;
+      return this.Products.filter((product) => product.categoryId === this.selectedCategory);
     },
-    data() {
-      return {
-        Categories: [],
-        Promotions: [],
-        Products: [],
-        selectedCategory: null, // To track the active category
-      };
+  },
+  methods: {
+    async fetchCategories() {
+      try {
+        const response = await axios.get("http://localhost:3000/api/categories");
+        this.Categories = response.data;
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     },
-    computed: {
-      filteredProducts() {
-        // Filter products based on the selected category
-        if (!this.selectedCategory) return this.Products;
-        return this.Products.filter(
-          (product) => product.categoryId === this.selectedCategory
-        );
-      },
+    async fetchPromotions() {
+      try {
+        const response = await axios.get("http://localhost:3000/api/promotions");
+        this.Promotions = response.data;
+      } catch (error) {
+        console.error("Error fetching promotions:", error);
+      }
     },
-    methods: {
-      async fetchCategories() {
-        try {
-          const response = await axios.get("http://localhost:3000/api/categories");
-          this.Categories = response.data;
-          console.log("Categories:", this.Categories);
-        } catch (error) {
-          console.error("Error fetching categories:", error);
-          this.Categories = [];
-        }
-      },
-      async fetchPromotions() {
-        try {
-          const response = await axios.get("http://localhost:3000/api/promotions");
-          this.Promotions = response.data;
-          console.log("Promotions:", this.Promotions);
-        } catch (error) {
-          console.error("Error fetching promotions:", error);
-        }
-      },
-      async fetchProducts() {
-        try {
-          const response = await axios.get("http://localhost:3000/api/products");
-          this.Products = response.data.map((product) => ({
-            ...product,
-            image: Array.isArray(product.image)
-              ? product.image[0]
-              : product.image.replace(/[\[\]"]/g, ""),
-          }));
-          console.log("Products:", this.Products);
-        } catch (error) {
-          console.error("Error fetching products:", error);
-        }
-      },
+    async fetchProducts() {
+      try {
+        const response = await axios.get("http://localhost:3000/api/products");
+        this.Products = response.data;
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     },
-    async mounted() {
-      await Promise.all([
-        this.fetchCategories(),
-        this.fetchPromotions(),
-        this.fetchProducts(),
-      ]);
-    },
-  };
-  </script>
-  
-  <style scoped>
-  .category,
-  .promotion {
-    padding-top: 20px;
-    margin: auto;
-    width: 90%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  
-  .product {
-    padding-top: 20px;
-    margin: auto;
-    width: 90%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0;
-    padding: 0 5%;
-  }
-  
-  .title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin: 0;
-  }
-  
-  .tabs {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .tab-button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .tab-button.active {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .tab-button:hover {
-    background-color: #007bff;
-    color: white;
-  }
-  </style>
-  
+  },
+  async mounted() {
+    await Promise.all([this.fetchCategories(), this.fetchPromotions(), this.fetchProducts()]);
+  },
+};
+</script>
+
+<style scoped>
+.home-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 20px;
+}
+
+/* Showcase Section */
+.showcase {
+  text-align: center;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.newsletter-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.newsletter-input {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.subscribe-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Sections */
+.section {
+  padding: 20px 0;
+}
+
+.section h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+/* Category Container */
+.category-container,
+.promotion-container,
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Links */
+.category-link,
+.product-link {
+  text-decoration: none;
+}
+
+/* General Styling */
+h2 {
+  color: #333;
+}
+</style>
