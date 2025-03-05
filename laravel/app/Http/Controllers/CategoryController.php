@@ -6,59 +6,24 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function getCategories() {
+        return ["message" => "Getting list of categories"];
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    
+    public function createCategory() {
+        return ["message" => "Creating 1 new category"];
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    
+    public function getCategory($categoryId) {
+        return ["message" => "Getting 1 category base on given categoryId"];
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+    
+    public function updateCategory($categoryId) {
+        return ["message" => "Updating 1 category base on given categoryId"];
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+    
+    public function deleteCategory($categoryId) {
+        return ["message" => "Deleting 1 category base on given categoryId"];
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    
 }
