@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Product;
 class ProductController extends Controller
 {
    
     public function getProducts() {
-        return ["message" => "Getting list of products"];
+        $products = Product::all();
+        return response()->json($products);
     }
+
 
  
     public function createProduct() {
