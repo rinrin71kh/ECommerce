@@ -12,20 +12,48 @@ class CategoryController extends Controller
        return response()->json($categories);
     }
     
-    public function createCategory() {
-        return ["message" => "Creating 1 new category"];
+    public function createCategory(Request $req )
+    {
+        $category = new Category;
+        $category->name = $req->name;
+        $category->save();
+        return $category;
+    }
+    public function getCategory($categoryId)
+    {
+        $category = Category::find($categoryId);
+
+        if(!$category){
+            return ["message" => "Can't find this catefory!"];
+        }
+        return $category;
     }
     
-    public function getCategory($categoryId) {
-        return ["message" => "Getting 1 category base on given categoryId"];
+    public function updateCategory(Request $req, $categoryId)
+    {
+        $category = Category::find($categoryId);
+
+        if(!$category){
+            return ["message" => "Update unsuccessfull!"];
+        }
+
+        $category->name = $req->name;
+        $category->save();
+        return $category;
     }
+
     
-    public function updateCategory($categoryId) {
-        return ["message" => "Updating 1 category base on given categoryId"];
-    }
-    
-    public function deleteCategory($categoryId) {
-        return ["message" => "Deleting 1 category base on given categoryId"];
+    public function deleteCategory($categoryId)
+    {
+        $category = Category::find($categoryId);
+
+        if(!$category){
+            return ["message" => "Delete unsuccessfull!"];
+        }
+        
+        $category->delete();
+
+        return ["message" => "Delete successfull!"];
     }
     
 }
