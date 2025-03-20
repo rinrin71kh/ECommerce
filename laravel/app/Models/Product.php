@@ -8,7 +8,7 @@ class Product extends Model
 {
  
        //
-       use HasFactory;
+       protected $table = 'products';
        protected $fillable = ['name' , 'category_id', 'pricing', 'description', 'images'];
 
     public function category(): BelongsTo //M:1
@@ -16,4 +16,17 @@ class Product extends Model
             return $this->belongsTo(Category::class, 'category_id','id')
             ->select('id', 'name');
         }
+
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart:: class);
+    }
+    public function whistlists(): HasMany
+    {
+        return $this->hasMany(Whistlist:: class);
+    }
+    public function order_product(): HasMany
+    {
+        return $this->hasMany(Order_Product:: class);
+    }
 }
