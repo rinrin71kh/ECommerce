@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Whistlist extends Model
 {
     //
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $table = 'whistlist';
     protected $fillable = ['product_id','customer_id'];
 

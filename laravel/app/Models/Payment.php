@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     //
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $table = 'payment';
     protected $fillable = ['payment_date','payment_method','amount','customer_id','order_id'];
     public function customer(): BelongsTo{

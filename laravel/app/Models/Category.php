@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Category extends Model
 {
     //
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
     protected $table = 'categories';
     protected $fillable = ['name'];
     public function products(): HasMany //1:M

@@ -8,6 +8,8 @@ class Product extends Model
 {
  
        //
+       use SoftDeletes;
+       protected $dates = ['deleted_at'];
        protected $table = 'products';
        protected $fillable = ['name' , 'category_id', 'pricing', 'description', 'images'];
 
