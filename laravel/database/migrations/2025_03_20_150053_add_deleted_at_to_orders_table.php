@@ -11,7 +11,35 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::table('categories', function (Blueprint $table) {
+            //
+            $table->softDeletes();
+        });
+        Schema::table('products', function (Blueprint $table) {
+            //
+            $table->softDeletes();
+        });
+        Schema::table('customer', function (Blueprint $table) {
+            //
+            $table->softDeletes();
+        });
+        Schema::table('cart', function (Blueprint $table) {
+            //
+            $table->softDeletes();
+        });
         Schema::table('order', function (Blueprint $table) {
+            //
+            $table->softDeletes();
+        });
+        Schema::table('payment', function (Blueprint $table) {
+            //
+            $table->softDeletes();
+        });
+        Schema::table('order_product', function (Blueprint $table) {
+            //
+            $table->softDeletes();
+        });
+        Schema::table('whistlist', function (Blueprint $table) {
             //
             $table->softDeletes();
         });
@@ -22,7 +50,35 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('categories', function (Blueprint $table) {
+            //
+            $table->dropSoftDeletes();
+        });
+        Schema::table('products', function (Blueprint $table) {
+            //
+            $table->dropSoftDeletes();
+        });
+        Schema::table('customer', function (Blueprint $table) {
+            //
+            $table->dropSoftDeletes();
+        });
+        Schema::table('cart', function (Blueprint $table) {
+            //
+            $table->dropSoftDeletes();
+        });
         Schema::table('order', function (Blueprint $table) {
+            //
+            $table->dropSoftDeletes();
+        });
+        Schema::table('payment', function (Blueprint $table) {
+            //
+            $table->dropSoftDeletes();
+        });
+        Schema::table('order_product', function (Blueprint $table) {
+            //
+            $table->dropSoftDeletes();
+        });
+        Schema::table('whistlist', function (Blueprint $table) {
             //
             $table->dropSoftDeletes();
         });
