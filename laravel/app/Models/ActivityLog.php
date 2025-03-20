@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ActivityLog extends Model
 {
     //
+    public $timestamps = false;  // Disable timestamps
     protected $fillable = ['model', 'model_id', 'action', 'changes'];
     protected $casts = ['changes' => 'array']; // Ensure changes are stored as JSON
 }
