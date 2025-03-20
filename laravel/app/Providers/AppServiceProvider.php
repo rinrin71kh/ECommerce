@@ -1,7 +1,15 @@
 <?php
 
 namespace App\Providers;
-
+use App\Observers\ModelActivityObserver;
+use App\Models\Order;
+use App\Models\Cart;
+use App\Models\Category;
+use App\Models\Customer;
+use App\Models\Payment;
+use App\Models\OrderProduct;
+use App\Models\Product;
+use App\Models\Whistlist;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +27,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        //
         Order::observe(ModelActivityObserver::class);
+        Cart::observe(ModelActivityObserver::class);
+        Category::observe(ModelActivityObserver::class);
+        Customer::observe(ModelActivityObserver::class);
+        Payment::observe(ModelActivityObserver::class);
+        OrderProduct::observe(ModelActivityObserver::class);
+        Product::observe(ModelActivityObserver::class);
+        Whistlist::observe(ModelActivityObserver::class);
     }
+    
 }
