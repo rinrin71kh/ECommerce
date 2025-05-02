@@ -46,7 +46,8 @@ class CategoryTest extends TestCase
     // TC004: Get a single category by ID
     public function test_can_get_single_category()
     {
-        $category = Category::factory()->create();
+        $category = Category::create(['name' => 'Test Category']);
+
 
         $response = $this->get("/api/categories/{$category->id}");
 
@@ -80,7 +81,8 @@ class CategoryTest extends TestCase
     // TC007: Update with invalid name should return validation error
     public function test_update_category_validation_error()
     {
-        $category = Category::factory()->create();
+        $category = Category::create(['name' => 'Test Category']);
+
 
         $response = $this->patchJson("/api/categories/{$category->id}", [
             'name' => '',
@@ -108,7 +110,8 @@ class CategoryTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonFragment(['message' => 'Delete successful!']);
 
-        $this->assertDatabaseMissing('categories', ['id' => $category->id]);
+        $this->assertSoftDeleted('categories', ['id' => $category->id]);
+
     }
 
     // TC010: Deleting a non-existent category should return 404

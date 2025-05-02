@@ -7,53 +7,66 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function getCategories() {
-       $categories = Category::all();
-       return response()->json($categories);
-    }
-    
-    public function createCategory(Request $req )
+    // TC001: Get all categories
+    public function index()
     {
-        $category = new Category;
-        $category->name = $req->name;
-        $category->save();
-        return $category;
+        $categories = Category::all();
+        return response()->json($categories);
     }
-    public function getCategory($categoryId)
-    {
-        $category = Category::find($categoryId);
 
-        if(!$category){
-            return ["message" => "Can't find this catefory!"];
-        }
-        return $category;
-    }
-    
-    public function updateCategory(Request $req, $categoryId)
+    // TC002: Create a new category
+    public function store(Request $request)
     {
-        $category = Category::find($categoryId);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
 
-        if(!$category){
-            return ["message" => "Update unsuccessfull!"];
+        $category = Category::create($validated);
+
+        return response()->json($category, 201);
+    }
+
+    // TC004: Get a single category by ID
+    public function show($id)
+    {
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json(['message' => "Can't find this category!"], 404);
         }
 
-        $category->name = $req->name;
-        $category->save();
-        return $category;
+        return response()->json($category);
     }
 
-    
-    public function deleteCategory($categoryId)
+    // TC006: Update an existing category
+    public function update(Request $request, $id)
     {
-        $category = Category::find($categoryId);
+        $category = Category::find($id);
 
-        if(!$category){
-            return ["message" => "Delete unsuccessfull!"];
+        if (!$category) {
+            return response()->json(['message' => "Update unsuccessful!"], 404);
         }
-        
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category->update($validated);
+
+        return response()->json($category);
+    }
+
+    // TC009: Delete an existing category
+    public function destroy($id)
+    {
+        $category = Category::find($id);
+
+        if (!$category) {
+            return response()->json(['message' => "Delete unsuccessful!"], 404);
+        }
+
         $category->delete();
 
-        return ["message" => "Delete successfull!"];
+        return response()->json(['message' => "Delete successful!"]);
     }
-    
 }

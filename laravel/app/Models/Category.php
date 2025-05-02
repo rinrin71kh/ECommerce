@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Category extends Model
 {
     //
-    use SoftDeletes;
+    use HasFactory,SoftDeletes;
     protected $dates = ['deleted_at'];
     protected $table = 'categories';
     protected $fillable = ['name'];
