@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Cart extends Model
 {
     //
+    // TP9
     use SoftDeletes;
     protected $table = 'cart';
     protected $dates = ['deleted_at'];
