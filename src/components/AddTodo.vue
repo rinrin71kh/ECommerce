@@ -1,20 +1,23 @@
 <template>
   <div class="input-field">
-    <textarea
-      @keyup.enter.prevent="addTodo"
-      ref="input"
-      placeholder="Enter your new todo"
-    ></textarea>
-    <i class="uil uil-notes note-icon"></i>
+    <textarea v-model="todoValue" @keyup.enter.prevent="emitTodo" ref="input" placeholder="Enter your new todo"></textarea>
+    <button class="add-btn" @click="emitTodo">Add</button>
   </div>
 </template>
+
 <script>
 export default {
+  data() {
+    return { todoValue: '' }
+  },
   methods: {
-    addTodo(e) {
-      this.$emit("added", e.target.value);
-      this.$refs.input.value = null;
+    emitTodo() {
+      const value = this.todoValue.trim()
+      if (value) {
+        this.$emit('added', { name: value }) // Make sure the object matches backend!
+        this.todoValue = ''
+      }
     },
   },
-};
+}
 </script>
