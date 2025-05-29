@@ -6,7 +6,7 @@ import { Task } from 'src/tasks/task.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class TasksService {
+export class TaskService {
   constructor(
     @InjectRepository(Task)
     private tasksRepo: Repository<Task>,

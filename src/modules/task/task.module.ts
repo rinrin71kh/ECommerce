@@ -1,12 +1,14 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { TasksController } from './task.controller';
-import { TaskService } from './task.service';
-import { Task } from 'src/tasks/task.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from '../user/user.module';
+import { Task } from 'src/tasks/task.entity';
+import { TaskService } from './task.service';
+import { TasksController } from './task.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Task]), UserModule],
+  imports: [
+    TypeOrmModule.forFeature([Task]),
+  ],
   providers: [TaskService],
   controllers: [TasksController],
 })

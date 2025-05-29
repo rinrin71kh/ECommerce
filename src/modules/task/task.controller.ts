@@ -11,10 +11,10 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { TasksService } from './task.service';
+import { TaskService } from './task.service';
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(private readonly tasksService: TaskService) {}
 
   @Get()
   findAll() {
