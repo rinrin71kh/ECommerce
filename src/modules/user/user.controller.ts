@@ -26,7 +26,7 @@ export class UsersController {
 
   @Patch('/:username')
   updateUser(
-    @Body() body: { username: string; email: string; password: string },
+    @Body() body: { username: string; email: string; password: string }
   ) {
     return this.userService.updateUser(body);
   }
