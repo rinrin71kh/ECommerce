@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   Body,
   Controller,
@@ -7,33 +11,42 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { TaskService } from './task.service';
-
+import { TasksService } from './task.service';
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(private readonly tasksService: TasksService) {}
 
-  @Get('/:id')
-  getTask(@Param('id') id: string) {
-    return this.taskService.getTask(id);
-  }
-  @Post('/')
-  createTask(@Body() body: any) {
-    return this.taskService.createTask(body);
+  @Get()
+  findAll() {
+    return this.tasksService.findAll();
   }
 
-  @Patch('/:id/done')
-  markTaskAsDone(@Body() body: any, @Param('id') id: string) {
-    return this.taskService.updateTask(id, body);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.tasksService.findOne(Number(id));
   }
 
-  @Patch('/:id/pending')
-  markTaskAsPending(@Body() body: any, @Param('id') id: string) {
-    return this.taskService.updateTask(id, body);
+  @Post()
+  create(@Body() body: any) {
+    return this.tasksService.create(body);
   }
 
-  @Delete('/:id')
-  deleteTask(@Param('id') id: string) {
-    return this.taskService.deleteTask(id);
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() body: any) {
+    return this.tasksService.update(Number(id), body);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.tasksService.remove(Number(id));
+  }
+
+  // Optional: clear all tasks for "Clear All" in your Vue app
+  @Delete()
+  async clearAll() {
+    if (typeof this.tasksService['clearAll'] === 'function') {
+      return this.tasksService['clearAll']();
+    }
+    return { message: 'Clear all not implemented in service.' };
   }
 }
