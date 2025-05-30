@@ -44,9 +44,6 @@ export class TasksController {
   // Optional: clear all tasks for "Clear All" in your Vue app
   @Delete()
   async clearAll() {
-    if (typeof this.tasksService['clearAll'] === 'function') {
-      return this.tasksService['clearAll']();
-    }
-    return { message: 'Clear all not implemented in service.' };
+    return this.tasksService.clearAll();
   }
 }
