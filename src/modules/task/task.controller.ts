@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -10,38 +7,44 @@ import {
   Param,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
+import { CreateTaskDto } from './dto/create-task.dto';
+// import { UpdateTaskDto } from './dto/update-task.dto'; // Use if you have one
+
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TaskService) {}
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.tasksService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.tasksService.findOne(Number(id));
   }
 
   @Post()
-  create(@Body() body: any) {
-    return this.tasksService.create(body);
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
+  async create(@Body() createTaskDto: CreateTaskDto) {
+    return this.tasksService.create(createTaskDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: any) {
-    return this.tasksService.update(Number(id), body);
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
+  async update(@Param('id') id: string, @Body() updateData: Partial<CreateTaskDto>) {
+    return this.tasksService.update(Number(id), updateData);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.tasksService.remove(Number(id));
   }
 
-  // Optional: clear all tasks for "Clear All" in your Vue app
   @Delete()
   async clearAll() {
     return this.tasksService.clearAll();

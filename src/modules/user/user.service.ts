@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
 import { Repository } from 'typeorm';
@@ -11,17 +10,24 @@ export class UsersService {
     private usersRepo: Repository<User>
   ) {}
 
-  create(userData: Partial<User>) {
+  async create(userData: Partial<User>) {
     const user = this.usersRepo.create(userData);
-    return this.usersRepo.save(user);
+    return await this.usersRepo.save(user);
   }
 
-  findAll() {
-    return this.usersRepo.find({ relations: ['tasks'] });
+  async findAll() {
+    return await this.usersRepo.find({ relations: ['tasks'] });
   }
 
-  findOne(id: number) {
-    return this.usersRepo.findOne({ where: { id }, relations: ['tasks'] });
+  async findOne(id: number) {
+    const user = await this.usersRepo.findOne({
+      where: { id },
+      relations: ['tasks'],
+    });
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    return user;
   }
 
   async update(id: number, updateData: Partial<User>) {
@@ -29,7 +35,7 @@ export class UsersService {
     return this.findOne(id);
   }
 
-  remove(id: number) {
-    return this.usersRepo.delete(id);
+  async remove(id: number) {
+    return await this.usersRepo.delete(id);
   }
 }
