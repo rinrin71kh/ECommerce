@@ -1,4 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
 import { Repository } from 'typeorm';
@@ -12,7 +15,17 @@ export class UsersService {
 
   async create(userData: Partial<User>) {
     const user = this.usersRepo.create(userData);
-    return await this.usersRepo.save(user);
+    try {
+      return await this.usersRepo.save(user);
+    } catch (err) {
+      if (
+        err.code === 'SQLITE_CONSTRAINT' ||
+        err.code === '23505' // 23505 is PostgreSQL unique violation
+      ) {
+        throw new BadRequestException('Email already exists');
+      }
+      throw err; // rethrow other errors
+    }
   }
 
   async findAll() {
