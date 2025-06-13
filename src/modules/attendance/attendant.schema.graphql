@@ -4,6 +4,12 @@ enum AttendanceStatus {
   L
   A
 }
+type AttendanceStatusCount {
+  P: Int!
+  AP: Int!
+  L: Int!
+  A: Int!
+}
 
 type Attendance {
   id: ID!
@@ -14,8 +20,13 @@ type Attendance {
 }
 
 type Query {
+  attendances(status: AttendanceStatus): [Attendance]!
+  attendancesByClass(class: String!, status: AttendanceStatus): [Attendance]!
+  attendancesByStudent(student_id: Int!, status: AttendanceStatus): [Attendance]!
   countAttendanceByClass(class: String!, status: AttendanceStatus): Int!
   countAttendanceByStudent(student_id: Int!, status: AttendanceStatus): Int!
+   countAttendanceByClassAllStatus(class: String!): AttendanceStatusCount!
+  countAttendanceByStudentAllStatus(student_id: Int!): AttendanceStatusCount!
 }
 
 type Mutation {
