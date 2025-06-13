@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { BookResolver } from './book.resolver';
+import { AttendanceResolver } from './attendant.resolver';
 
 @Module({
   imports: [],
   controllers: [],
-  providers: [BookResolver],
+  providers: [AttendanceResolver],
 })
-export class BookModule {}
+export class AttendanceModule {}
